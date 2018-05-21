@@ -12,60 +12,6 @@ mongoose.connect("mongodb://127.0.0.1:27017/ershouche", { useMongoClient: true }
 //引入模型文件
 var Car = require("./models/Car.js");
  
-//接口，查询某一个id的车的信息（包括images）
-app.get("/carinfo/:id" , (req,res)=>{
-	//得到:id的值
-	var id = req.params.id;
-	//查询数据库
-	Car.find({id}).exec((err , results)=>{
-		res.json({"result" : results[0]})		//车只有一辆，0表示这辆车
-	});
-});
-
-//接口，查询和某一个id的车同品牌、同车系的车
-app.get("/carlike/:id" , (req,res)=>{
-	//得到:id的值
-	var id = req.params.id;
-	//先要知道查的这个车的品牌、车系
-	Car.find({id}).exec((err , results) => {
-		//得到你查询的这个id的品牌和车系
-		var brand = results[0].brand;
-		var series = results[0].series;
-		//继续查询，
-		Car.find({brand , series}).exec((err , results)=>{
-			res.json({results});
-		});
-	});
-});
-
-
-//全部的品牌和车系
-app.get("/brandandseries" , function(req,res){
-	res.json({
-		"A" : [
-			{"奥迪" : ["A4","A5","Q5","Q7","Q9","TT"]},
-			{"阿斯顿马丁" : ["DB9" ,"V8", "Rapide" ,"Virage" ,"DBS"]}
-		],
-		"B" : [
-			{"本田" : ["雅阁", "思域", "CR-V","奥德赛", "飞度" ,"锋范", "凌派"]},
-			{"宝马" : ["X5","X6"]},
-			{"奔驰": ["A级", "B级", "C级","GLK级"]}
-		],
-		"D" : [
-			{"东风" : ["雪铁龙","东风1号"]},
-			{"大众" : ["桑塔纳" , "高尔夫" , "脉腾"]}
-		],
-		"L" : [
-			{"路虎" : ["发现"]}
-		],
-		"R" : [
-			{"日产" : ["骐达" , "楼兰" , "奇骏" , "天籁"]}
-		],
-		"X" : [
-			{"雪佛兰": ["迈锐宝", "科迈罗", "景程" ,"乐风" ,"爱唯欧","科鲁兹"] }
-		]
-	});
-});
 
 //接口，查询车辆
 app.post("/cars" , function(req,res){
